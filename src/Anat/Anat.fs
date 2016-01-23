@@ -31,13 +31,13 @@ module Infer =
 
         (* Arrows *)
 
-        static member inline Arrow (ab: Arrow<'a>) =
-            ab
+        static member inline Arrow (a: Arrow<'a>) =
+            a
 
         (* Functions *)
 
-        static member inline Arrow (ab: 'a -> 'b) =
-            Arrow ab
+        static member inline Arrow (f: 'a -> 'b) =
+            Arrow f
 
         (* Async Functions *)
 
@@ -58,15 +58,15 @@ module Infer =
 
         (* Functions *)
 
-        static member inline Compose ((Arrow ab): Arrow<('a -> 'b)>) =
-            fun ((Arrow bc): Arrow<('b -> 'c)>) ->
-                Arrow (ab >> bc)
+        static member inline Compose ((Arrow a1): Arrow<('a -> 'b)>) =
+            fun ((Arrow a2): Arrow<('b -> 'c)>) ->
+                Arrow (a1 >> a2)
 
         (* Async Functions *)
 
-        static member inline Compose ((Arrow ab): Arrow<('a -> Async<'b>)>) =
-            fun ((Arrow bc): Arrow<('b -> Async<'c>)>) ->
-                Arrow (fun a -> async.Bind (ab a, bc))
+        static member inline Compose ((Arrow a1): Arrow<('a -> Async<'b>)>) =
+            fun ((Arrow a2): Arrow<('b -> Async<'c>)>) ->
+                Arrow (fun a -> async.Bind (a1 a, a2))
 
     let inline composeDefaults (a: ^a Arrow, _: ^defaults) =
         ((^a or ^defaults) : (static member Compose: ^a Arrow -> (^b Arrow -> ^c Arrow)) a)
@@ -85,17 +85,17 @@ module Infer =
    etc. papers, for clarity or to provide non-symbolic equivalents (though
    symbolic operators are provided later). These are:
 
-   - arr => create
+   - arr => arrow
    - >>> => compose *)
 
 [<RequireQualifiedAccess>]
 module Arrow =
 
-    let inline create ab =
-        Infer.arrow ab
+    let inline arrow a =
+        Infer.arrow a
 
-    let inline compose ab bc =
-        Infer.compose (create ab) (create bc)
+    let inline compose a1 a2 =
+        Infer.compose (arrow a1) (arrow a2)
 
 (* Operators
 
@@ -110,5 +110,38 @@ module Arrow =
 
 module Operators =
 
-    let inline (>>>) ab bc =
-        Arrow.compose ab bc
+    let inline (>>>) a1 a2 =
+        Arrow.compose a1 a2
+
+
+
+
+
+
+
+
+
+
+
+(* Temporary
+
+   Make sure that syntax, inference, etc. still works as expected while we make
+   some changes and extend things! To be pulled out to unit tests when there is
+   some stability. *)
+
+open Operators
+
+(* Fixtures *)
+
+let f1 : bool -> int =
+    (function | true -> 1
+              | _ -> 0)
+
+let a1 : Arrow<(int -> string)> =
+    (function | 1 -> "true"
+              | _ -> "false") |> Arrow.arrow
+
+(* Composition *)
+
+let a2 : Arrow<(bool -> string)> =
+    f1 >>> a1
