@@ -1,0 +1,35 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.24720.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sln", "sln", "{FD10FBDC-0187-457F-B451-1E7B13203863}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "dependencies", "dependencies", "{11E6EED5-0C09-41F2-A205-46F38B07DAB6}"
+	ProjectSection(SolutionItems) = preProject
+		paket.dependencies = paket.dependencies
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{AB282BC8-5793-4C6C-BFE7-4ABACD70B2F6}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Anat", "src\Anat\Anat.fsproj", "{E87B1C18-3021-4634-A124-1F0FFFAFBDE2}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E87B1C18-3021-4634-A124-1F0FFFAFBDE2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E87B1C18-3021-4634-A124-1F0FFFAFBDE2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E87B1C18-3021-4634-A124-1F0FFFAFBDE2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E87B1C18-3021-4634-A124-1F0FFFAFBDE2}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{11E6EED5-0C09-41F2-A205-46F38B07DAB6} = {FD10FBDC-0187-457F-B451-1E7B13203863}
+		{E87B1C18-3021-4634-A124-1F0FFFAFBDE2} = {AB282BC8-5793-4C6C-BFE7-4ABACD70B2F6}
+	EndGlobalSection
+EndGlobal
