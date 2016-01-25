@@ -31,24 +31,24 @@ module Infer =
 
         (* Arrows *)
 
-        static member inline Arrow (a: Arrow<'a>) =
+        static member inline Arrow (a: _ Arrow) =
             a
 
-        (* Functions *)
+        (* Value Functions *)
 
-        static member inline Arrow (f: 'a -> 'b) =
+        static member inline Arrow (f: ^a -> ^b when ^b : equality) =
             Arrow f
 
         (* Async Functions *)
 
-        static member inline Arrow (f: 'a -> Async<'b>) =
+        static member inline Arrow (f: ^a -> ^b Async) =
             Arrow f
 
 
     let inline arrowDefaults (a: ^a, _: ^defaults) =
         ((^a or ^defaults) : (static member Arrow: ^a -> ^b Arrow) a)
 
-    let inline arrow (a: 'a) =
+    let inline arrow (a: ^a) =
         arrowDefaults (a, ArrowDefaults)
 
     (* Compose *)
@@ -56,16 +56,16 @@ module Infer =
     type ComposeDefaults =
         | ComposeDefaults
 
-        (* Functions *)
+        (* Value Functions *)
 
-        static member inline Compose ((Arrow a1): Arrow<('a -> 'b)>) =
-            fun ((Arrow a2): Arrow<('b -> 'c)>) ->
+        static member inline Compose (Arrow (a1: ^a -> ^b when ^b : equality)) =
+            fun (Arrow (a2: ^b -> ^c when ^c : equality)) ->
                 Arrow (a1 >> a2)
 
         (* Async Functions *)
 
-        static member inline Compose ((Arrow a1): Arrow<('a -> Async<'b>)>) =
-            fun ((Arrow a2): Arrow<('b -> Async<'c>)>) ->
+        static member inline Compose ((Arrow a1): Arrow<(^a -> ^b Async)>) =
+            fun ((Arrow a2): Arrow<(^b -> ^c Async)>) ->
                 Arrow (fun a -> async.Bind (a1 a, a2))
 
     let inline composeDefaults (a: ^a Arrow, _: ^defaults) =
@@ -73,6 +73,33 @@ module Infer =
 
     let inline compose (a: Arrow<'a>) =
         composeDefaults (a, ComposeDefaults)
+
+    (* Fanout *)
+
+    type FanoutDefaults =
+        | FanoutDefaults
+
+        (* Functions *)
+
+        static member inline Fanout ((Arrow a1): Arrow<('a -> 'b)>) =
+            fun ((Arrow a2): Arrow<('a -> 'c)>) ->
+                Arrow (fun a -> a1 a, a2 a)
+
+        (* Async Functions *)
+
+        static member inline Fanout ((Arrow a1): Arrow<('a -> Async<'b>)>) =
+            fun ((Arrow a2): Arrow<('a -> Async<'c>)>) ->
+                Arrow (fun a -> async {
+                    let! b = a1 a
+                    let! c = a2 a
+
+                    return b, c })
+
+    let inline fanoutDefaults (a: ^a Arrow, _: ^defaults) =
+        ((^a or ^defaults) : (static member Fanout: ^a Arrow -> (^b Arrow -> ^c Arrow)) a)
+
+    let inline fanout (a: Arrow<'a>) =
+        fanoutDefaults (a, FanoutDefaults)
 
 (* Arrow
 
@@ -86,16 +113,29 @@ module Infer =
    symbolic operators are provided later). These are:
 
    - arr => arrow
-   - >>> => compose *)
+   - >>> => compose
+   - &&& => fanout
+   - *** => split *)
 
 [<RequireQualifiedAccess>]
 module Arrow =
+
+    (* Basic Functions *)
+
+    let run (Arrow a1) a =
+        a1 a
+
+    (* Inferred Functions *)
 
     let inline arrow a =
         Infer.arrow a
 
     let inline compose a1 a2 =
         Infer.compose (arrow a1) (arrow a2)
+
+    let inline fanout a1 a2 =
+        Infer.fanout (arrow a1) (arrow a2)
+
 
 (* Operators
 
@@ -113,10 +153,8 @@ module Operators =
     let inline (>>>) a1 a2 =
         Arrow.compose a1 a2
 
-
-
-
-
+    let inline (&&&) a1 a2 =
+        Arrow.fanout a1 a2
 
 
 
@@ -133,15 +171,29 @@ open Operators
 
 (* Fixtures *)
 
-let f1 : bool -> int =
-    (function | true -> 1
-              | _ -> 0)
+let testAsync =
+    fun (i: int) -> async.Return (2 * i)
 
-let a1 : Arrow<(int -> string)> =
-    (function | 1 -> "true"
-              | _ -> "false") |> Arrow.arrow
+//Async.
+
+let f1 : bool -> int list =
+    (function | true -> [ 1 ]
+              | _ -> [ 0 ])
+
+let f2 : int list -> string =
+    (function | [ 1 ] -> "true"
+              | _ -> "false")
+
+let f3 : bool -> string =
+    (function | true -> "true"
+              | _ -> "false")
 
 (* Composition *)
 
-let a2 : Arrow<(bool -> string)> =
-    f1 >>> a1
+let a1 : Arrow<(bool -> string)> =
+    f1 >>> f2
+
+(* Fanout *)
+
+let a2 : Arrow<(bool -> int list * string)> =
+    f1 &&& f3
