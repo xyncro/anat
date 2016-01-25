@@ -31,17 +31,17 @@ module Infer =
 
         (* Arrows *)
 
-        static member inline Arrow (a: _ Arrow) =
+        static member inline Arrow (a: Arrow<_>) =
             a
 
-        (* Value Functions *)
+        (* Values *)
 
-        static member inline Arrow (f: ^a -> ^b when ^b : equality) =
+        static member inline Arrow (f: 'a -> 'b when 'b : equality) =
             Arrow f
 
-        (* Async Functions *)
+        (* Async Values *)
 
-        static member inline Arrow (f: ^a -> ^b Async) =
+        static member inline Arrow (f: 'a -> Async<'b>) =
             Arrow f
 
 
@@ -56,17 +56,17 @@ module Infer =
     type ComposeDefaults =
         | ComposeDefaults
 
-        (* Value Functions *)
+        (* Values *)
 
-        static member inline Compose (Arrow (a1: ^a -> ^b when ^b : equality)) =
-            fun (Arrow (a2: ^b -> ^c when ^c : equality)) ->
-                Arrow (a1 >> a2)
+        static member inline Compose (Arrow (f: 'a -> 'b when 'b : equality)) =
+            fun (Arrow (g: 'b -> 'c when 'c : equality)) ->
+                Arrow (f >> g)
 
-        (* Async Functions *)
+        (* Async Values *)
 
-        static member inline Compose ((Arrow a1): Arrow<(^a -> ^b Async)>) =
-            fun ((Arrow a2): Arrow<(^b -> ^c Async)>) ->
-                Arrow (fun a -> async.Bind (a1 a, a2))
+        static member inline Compose (Arrow (f: 'a -> Async<'b>)) =
+            fun (Arrow (g: 'b -> Async<'c>)) ->
+                Arrow (fun a -> async.Bind (f a, g))
 
     let inline composeDefaults (a: ^a Arrow, _: ^defaults) =
         ((^a or ^defaults) : (static member Compose: ^a Arrow -> (^b Arrow -> ^c Arrow)) a)
@@ -79,21 +79,17 @@ module Infer =
     type FanoutDefaults =
         | FanoutDefaults
 
-        (* Functions *)
+        (* Values *)
 
-        static member inline Fanout ((Arrow a1): Arrow<('a -> 'b)>) =
-            fun ((Arrow a2): Arrow<('a -> 'c)>) ->
-                Arrow (fun a -> a1 a, a2 a)
+        static member inline Fanout (Arrow (f: 'a -> 'b when 'b : equality)) =
+            fun (Arrow (g: 'a -> 'c when 'c : equality)) ->
+                Arrow (fun a -> f a, g a)
 
-        (* Async Functions *)
+        (* Async Values *)
 
-        static member inline Fanout ((Arrow a1): Arrow<('a -> Async<'b>)>) =
-            fun ((Arrow a2): Arrow<('a -> Async<'c>)>) ->
-                Arrow (fun a -> async {
-                    let! b = a1 a
-                    let! c = a2 a
-
-                    return b, c })
+        static member inline Fanout (Arrow (f: 'a -> Async<'b>)) =
+            fun (Arrow (g: 'a -> Async<'c>)) ->
+                Arrow (fun a -> async.Bind (f a, fun b -> async.Bind (g a, fun c -> async.Return (b, c))))
 
     let inline fanoutDefaults (a: ^a Arrow, _: ^defaults) =
         ((^a or ^defaults) : (static member Fanout: ^a Arrow -> (^b Arrow -> ^c Arrow)) a)
