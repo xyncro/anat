@@ -167,11 +167,6 @@ open Operators
 
 (* Fixtures *)
 
-let testAsync =
-    fun (i: int) -> async.Return (2 * i)
-
-//Async.
-
 let f1 : bool -> int list =
     (function | true -> [ 1 ]
               | _ -> [ 0 ])
@@ -184,10 +179,19 @@ let f3 : bool -> string =
     (function | true -> "true"
               | _ -> "false")
 
+let af1 =
+    (fun x -> async.Return (f1 x))
+
+let af2 =
+    (fun x -> async.Return (f2 x))
+
 (* Composition *)
 
 let a1 : Arrow<(bool -> string)> =
     f1 >>> f2
+
+let aa1 =
+    af1 >>> af2
 
 (* Fanout *)
 
