@@ -34,16 +34,17 @@ module Infer =
         static member inline Arrow (a: Arrow<_>) =
             a
 
-        (* Values *)
+        (* Value Functions *)
 
         static member inline Arrow (f: 'a -> 'b when 'b : equality) =
             Arrow f
 
-        (* Async Values *)
+        (* Async Value Functions *)
 
         static member inline Arrow (f: 'a -> Async<'b>) =
             Arrow f
 
+    (* Functions *)
 
     let inline arrowDefaults (a: ^a, _: ^defaults) =
         ((^a or ^defaults) : (static member Arrow: ^a -> ^b Arrow) a)
@@ -51,22 +52,29 @@ module Infer =
     let inline arrow (a: ^a) =
         arrowDefaults (a, ArrowDefaults)
 
-    (* Compose *)
+    (* Compose
+    
+       Inferred composition of two Arrows, where the composition mechanism
+       will vary based on the Arrow type (composition of plain/async/etc.
+       functions varies the implementation). *)
 
     type ComposeDefaults =
         | ComposeDefaults
 
-        (* Values *)
+        (* Value Functions *)
 
         static member inline Compose (Arrow (f: 'a -> 'b when 'b : equality)) =
             fun (Arrow (g: 'b -> 'c when 'c : equality)) ->
                 Arrow (f >> g)
 
-        (* Async Values *)
+        (* Async Value Functions *)
 
         static member inline Compose (Arrow (f: 'a -> Async<'b>)) =
             fun (Arrow (g: 'b -> Async<'c>)) ->
-                Arrow (fun a -> async.Bind (f a, g))
+                Arrow (fun a ->
+                    async.Bind (f a, g))
+
+    (* Functions *)
 
     let inline composeDefaults (a: ^a Arrow, _: ^defaults) =
         ((^a or ^defaults) : (static member Compose: ^a Arrow -> (^b Arrow -> ^c Arrow)) a)
@@ -79,23 +87,52 @@ module Infer =
     type FanoutDefaults =
         | FanoutDefaults
 
-        (* Values *)
+        (* Value Functions *)
 
         static member inline Fanout (Arrow (f: 'a -> 'b when 'b : equality)) =
             fun (Arrow (g: 'a -> 'c when 'c : equality)) ->
                 Arrow (fun a -> f a, g a)
 
-        (* Async Values *)
+        (* Async Value Functions *)
 
         static member inline Fanout (Arrow (f: 'a -> Async<'b>)) =
             fun (Arrow (g: 'a -> Async<'c>)) ->
-                Arrow (fun a -> async.Bind (f a, fun b -> async.Bind (g a, fun c -> async.Return (b, c))))
+                Arrow (fun a ->
+                    async.Bind (f a, fun b ->
+                        async.Bind (g a, fun c ->
+                            async.Return (b, c))))
 
     let inline fanoutDefaults (a: ^a Arrow, _: ^defaults) =
         ((^a or ^defaults) : (static member Fanout: ^a Arrow -> (^b Arrow -> ^c Arrow)) a)
 
     let inline fanout (a: Arrow<'a>) =
         fanoutDefaults (a, FanoutDefaults)
+
+    (* Split *)
+
+    type SplitDefaults =
+        | SplitDefaults
+
+        (* Value Functions *)
+
+        static member inline Split (Arrow (f: 'a -> 'c when 'c : equality)) =
+            fun (Arrow (g: 'b -> 'd when 'd : equality)) ->
+                Arrow (fun (a, b) -> f a, g b)
+
+        (* Async Value Functions *)
+
+        static member inline Split (Arrow (f: 'a -> Async<'c>)) =
+            fun (Arrow (g: 'b -> Async<'d>)) ->
+                Arrow (fun (a, b) ->
+                    async.Bind (f a, fun c ->
+                        async.Bind (g b, fun d ->
+                            async.Return (c, d))))
+
+    let inline splitDefaults (a: ^a Arrow, _: ^defaults) =
+        ((^a or ^defaults) : (static member Split: ^a Arrow -> (^b Arrow -> ^c Arrow)) a)
+
+    let inline split (a: Arrow<'a>) =
+        splitDefaults (a, SplitDefaults)
 
 (* Arrow
 
@@ -123,15 +160,17 @@ module Arrow =
 
     (* Inferred Functions *)
 
-    let inline arrow a =
-        Infer.arrow a
+    let inline arrow f =
+        Infer.arrow f
 
-    let inline compose a1 a2 =
-        Infer.compose (arrow a1) (arrow a2)
+    let inline compose f g =
+        Infer.compose (arrow f) (arrow g)
 
-    let inline fanout a1 a2 =
-        Infer.fanout (arrow a1) (arrow a2)
+    let inline fanout f g =
+        Infer.fanout (arrow f) (arrow g)
 
+    let inline split f g =
+        Infer.split (arrow f) (arrow g)
 
 (* Operators
 
@@ -146,54 +185,11 @@ module Arrow =
 
 module Operators =
 
-    let inline (>>>) a1 a2 =
-        Arrow.compose a1 a2
+    let inline ( >>> ) f g =
+        Arrow.compose f g
 
-    let inline (&&&) a1 a2 =
-        Arrow.fanout a1 a2
+    let inline ( &&& ) f g =
+        Arrow.fanout f g
 
-
-
-
-
-
-(* Temporary
-
-   Make sure that syntax, inference, etc. still works as expected while we make
-   some changes and extend things! To be pulled out to unit tests when there is
-   some stability. *)
-
-open Operators
-
-(* Fixtures *)
-
-let f1 : bool -> int list =
-    (function | true -> [ 1 ]
-              | _ -> [ 0 ])
-
-let f2 : int list -> string =
-    (function | [ 1 ] -> "true"
-              | _ -> "false")
-
-let f3 : bool -> string =
-    (function | true -> "true"
-              | _ -> "false")
-
-let af1 =
-    (fun x -> async.Return (f1 x))
-
-let af2 =
-    (fun x -> async.Return (f2 x))
-
-(* Composition *)
-
-let a1 : Arrow<(bool -> string)> =
-    f1 >>> f2
-
-let aa1 =
-    af1 >>> af2
-
-(* Fanout *)
-
-let a2 : Arrow<(bool -> int list * string)> =
-    f1 &&& f3
+    let inline ( *** ) f g =
+        Arrow.split f g
