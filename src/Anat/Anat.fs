@@ -31,20 +31,18 @@ module Infer =
 
         (* Arrows *)
 
-        static member inline Arrow (a: Arrow<_>) =
+        static member Arrow (a: Arrow<_>) =
             a
 
         (* Value Functions *)
 
-        static member inline Arrow (f: 'a -> 'b when 'b : equality) =
+        static member Arrow (f: 'a -> 'b when 'b : equality) =
             Arrow f
 
         (* Async Value Functions *)
 
-        static member inline Arrow (f: 'a -> Async<'b>) =
+        static member Arrow (f: 'a -> Async<'b>) =
             Arrow f
-
-    (* Functions *)
 
     let inline arrowDefaults (a: ^a, _: ^defaults) =
         ((^a or ^defaults) : (static member Arrow: ^a -> ^b Arrow) a)
@@ -53,7 +51,7 @@ module Infer =
         arrowDefaults (a, ArrowDefaults)
 
     (* Compose
-    
+
        Inferred composition of two Arrows, where the composition mechanism
        will vary based on the Arrow type (composition of plain/async/etc.
        functions varies the implementation). *)
@@ -63,18 +61,16 @@ module Infer =
 
         (* Value Functions *)
 
-        static member inline Compose (Arrow (f: 'a -> 'b when 'b : equality)) =
+        static member Compose (Arrow (f: 'a -> 'b when 'b : equality)) =
             fun (Arrow (g: 'b -> 'c when 'c : equality)) ->
                 Arrow (f >> g)
 
         (* Async Value Functions *)
 
-        static member inline Compose (Arrow (f: 'a -> Async<'b>)) =
+        static member Compose (Arrow (f: 'a -> Async<'b>)) =
             fun (Arrow (g: 'b -> Async<'c>)) ->
                 Arrow (fun a ->
                     async.Bind (f a, g))
-
-    (* Functions *)
 
     let inline composeDefaults (a: ^a Arrow, _: ^defaults) =
         ((^a or ^defaults) : (static member Compose: ^a Arrow -> (^b Arrow -> ^c Arrow)) a)
@@ -82,20 +78,73 @@ module Infer =
     let inline compose (a: Arrow<'a>) =
         composeDefaults (a, ComposeDefaults)
 
-    (* Fanout *)
+    (* First
+
+       Inferred application of an Arrow to the first of a pair of inputs,
+       giving a pair of outputs. *)
+
+    type FirstDefaults =
+        | FirstDefaults
+
+        (* Value Functions *)
+
+        static member First (Arrow (f: 'a -> 'b when 'b : equality)) =
+            Arrow (fun (a, b) -> f a, b)
+
+        (* Async Value Functions *)
+
+        static member First (Arrow (f: 'a -> Async<'c>)) =
+            Arrow (fun (a, b) -> async.Bind (f a, fun c -> async.Return (c, b)))
+
+    (* Functions *)
+
+    let inline firstDefaults (a: ^a Arrow, _: ^defaults) =
+        ((^a or ^defaults) : (static member First: ^a Arrow -> ^b Arrow) a)
+
+    let inline first (a: Arrow<'a>) =
+        firstDefaults (a, FirstDefaults)
+
+    (* Second
+
+       Inferred application of an Arrow to the second of a pair of inputs,
+       giving a pair of outputs. *)
+
+    type SecondDefaults =
+        | SecondDefaults
+
+        (* Value Functions *)
+
+        static member Second (Arrow (f: 'a -> 'b when 'b : equality)) =
+            Arrow (fun (a, b) -> a, f b)
+
+        (* Async Value Functions *)
+
+        static member Second (Arrow (f: 'b -> Async<'c>)) =
+            Arrow (fun (a, b) -> async.Bind (f b, fun c -> async.Return (a, c)))
+
+    let inline secondDefaults (a: ^a Arrow, _: ^defaults) =
+        ((^a or ^defaults) : (static member Second: ^a Arrow -> ^b Arrow) a)
+
+    let inline second (a: Arrow<'a>) =
+        secondDefaults (a, SecondDefaults)
+
+    (* Fanout
+
+       Creates an Arrow applying a pair of Arrow functions to a single input
+       value, returning a pair of output values. *)
 
     type FanoutDefaults =
         | FanoutDefaults
 
         (* Value Functions *)
 
-        static member inline Fanout (Arrow (f: 'a -> 'b when 'b : equality)) =
+        static member Fanout (Arrow (f: 'a -> 'b when 'b : equality)) =
             fun (Arrow (g: 'a -> 'c when 'c : equality)) ->
                 Arrow (fun a -> f a, g a)
 
         (* Async Value Functions *)
 
-        static member inline Fanout (Arrow (f: 'a -> Async<'b>)) =
+        static member Fanout (Arrow (f: 'a -> Async<'b>)) =
             fun (Arrow (g: 'a -> Async<'c>)) ->
                 Arrow (fun a ->
                     async.Bind (f a, fun b ->
@@ -108,20 +157,24 @@ module Infer =
     let inline fanout (a: Arrow<'a>) =
         fanoutDefaults (a, FanoutDefaults)
 
-    (* Split *)
+    (* Split
+
+       Creates an Arrow applying a pair of Arrow functions to a pair of input
+       values, giving a pair of output values (commonly known as bimap in more
+       general theory). *)
 
     type SplitDefaults =
         | SplitDefaults
 
         (* Value Functions *)
 
-        static member inline Split (Arrow (f: 'a -> 'c when 'c : equality)) =
+        static member Split (Arrow (f: 'a -> 'c when 'c : equality)) =
             fun (Arrow (g: 'b -> 'd when 'd : equality)) ->
                 Arrow (fun (a, b) -> f a, g b)
 
         (* Async Value Functions *)
 
-        static member inline Split (Arrow (f: 'a -> Async<'c>)) =
+        static member Split (Arrow (f: 'a -> Async<'c>)) =
             fun (Arrow (g: 'b -> Async<'d>)) ->
                 Arrow (fun (a, b) ->
                     async.Bind (f a, fun c ->
@@ -166,6 +219,12 @@ module Arrow =
     let inline compose f g =
         Infer.compose (arrow f) (arrow g)
 
+    let inline first f =
+        Infer.first (arrow f)
+
+    let inline second f =
+        Infer.second (arrow f)
+
     let inline fanout f g =
         Infer.fanout (arrow f) (arrow g)
 
@@ -185,6 +244,8 @@ module Arrow =
 
 module Operators =
 
+    (* Arrow Operators *)
+
     let inline ( >>> ) f g =
         Arrow.compose f g
 
@@ -193,3 +254,15 @@ module Operators =
 
     let inline ( *** ) f g =
         Arrow.split f g
+
+    (* Arrow Functions
+
+       Using the operators also introduces the unqualified functions first and
+       second in to scope, to aid in more concise and idiomatic usage of Arrow
+       functions. *)
+
+    let inline first f =
+        Arrow.first f
+
+    let inline second f =
+        Arrow.second f

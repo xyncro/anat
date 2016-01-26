@@ -56,6 +56,20 @@ let ``Arrow.compose composes two Arrows`` () =
     Arrow.run (Arrow.compose f1 f2) true =! "true"
     Async.RunSynchronously (Arrow.run (Arrow.compose asyncf1 asyncf2) true) =! "true"
 
+(* Arrow.first *)
+
+[<Fact>]
+let ``Arrow.first applies an Arrow to the first of a pair of inputs`` () =
+    Arrow.run (Arrow.first f1) (true, true) =! (1, true)
+    Async.RunSynchronously (Arrow.run (Arrow.first asyncf1) (true, true)) =! (1, true)
+
+(* Arrow.second *)
+
+[<Fact>]
+let ``Arrow.second applies an Arrow to the second of a pair of inputs`` () =
+    Arrow.run (Arrow.second f1) (true, true) =! (true, 1)
+    Async.RunSynchronously (Arrow.run (Arrow.second asyncf1) (true, true)) =! (true, 1)
+
 (* Arrow.fanout *)
 
 [<Fact>]
@@ -69,3 +83,5 @@ let ``Arrow.fanout applies two Arrows to a single input`` () =
 let ``Arrow.split applies two Arrows to a pair of inputs`` () =
     Arrow.run (Arrow.split f1 f2) (true, 0) =! (1, "false")
     Async.RunSynchronously (Arrow.run (Arrow.split asyncf1 asyncf2) (true, 0)) =! (1, "false")
+
+(* Examples *)
