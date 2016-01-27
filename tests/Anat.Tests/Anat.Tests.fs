@@ -1,7 +1,6 @@
 ﻿module Anat.Tests
 
 open Anat
-open Anat.Operators
 open Swensen.Unquote
 open Xunit
 
@@ -84,21 +83,3 @@ let ``Arrow.fanout applies two Arrows to a single input`` () =
 let ``Arrow.split applies two Arrows to a pair of inputs`` () =
     Arrow.run (Arrow.split f1 f2) (true, 0) =! (1, "false")
     Async.RunSynchronously (Arrow.run (Arrow.split asyncf1 asyncf2) (true, 0)) =! (1, "false")
-
-(* Examples *)
-
-(* Adder
-
-   The simple stateless adding Arrow given as part of the examples at
-   https://www.haskell.org/arrows/syntax.html
-
-   We are forced to give some type annotations to help the type inference
-   along, helping to infer the type of >>> in this case. We could equally
-   specify the types of f or g with the same result. *)
-
-let addA f g : Arrow<(int -> int)> =
-    f &&& g >>> (fun (y, z) -> y + z)
-
-[<Fact>]
-let ``addA behaves correctly`` () =
-    Arrow.run (addA ((*) 2) ((/) 3)) 3 =! 7

@@ -51,6 +51,7 @@
   <Import Project="$(FSharpTargetsPath)" />
   <ItemGroup>
     <Compile Include="Anat.Tests.fs" />
+    <Compile Include="Anat.Examples.fs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="mscorlib" />

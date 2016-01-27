@@ -89,12 +89,15 @@ module Infer =
         (* Value Functions *)
 
         static member First (Arrow (f: 'a -> 'b when 'b : equality)) =
-            Arrow (fun (a, b) -> f a, b)
+            Arrow (fun (a, b) ->
+                f a, b)
 
         (* Async Value Functions *)
 
         static member First (Arrow (f: 'a -> Async<'c>)) =
-            Arrow (fun (a, b) -> async.Bind (f a, fun c -> async.Return (c, b)))
+            Arrow (fun (a, b) ->
+                async.Bind (f a, fun c ->
+                    async.Return (c, b)))
 
     (* Functions *)
 
@@ -115,12 +118,15 @@ module Infer =
         (* Value Functions *)
 
         static member Second (Arrow (f: 'a -> 'b when 'b : equality)) =
-            Arrow (fun (a, b) -> a, f b)
+            Arrow (fun (a, b) ->
+                a, f b)
 
         (* Async Value Functions *)
 
         static member Second (Arrow (f: 'b -> Async<'c>)) =
-            Arrow (fun (a, b) -> async.Bind (f b, fun c -> async.Return (a, c)))
+            Arrow (fun (a, b) ->
+                async.Bind (f b, fun c ->
+                    async.Return (a, c)))
 
     let inline secondDefaults (a: ^a Arrow, _: ^defaults) =
         ((^a or ^defaults) : (static member Second: ^a Arrow -> ^b Arrow) a)
@@ -170,7 +176,8 @@ module Infer =
 
         static member Split (Arrow (f: 'a -> 'c when 'c : equality)) =
             fun (Arrow (g: 'b -> 'd when 'd : equality)) ->
-                Arrow (fun (a, b) -> f a, g b)
+                Arrow (fun (a, b) ->
+                    f a, g b)
 
         (* Async Value Functions *)
 
@@ -208,8 +215,8 @@ module Arrow =
 
     (* Basic Functions *)
 
-    let run (Arrow a1) a =
-        a1 a
+    let run (Arrow a1) =
+        a1
 
     (* Inferred Functions *)
 
