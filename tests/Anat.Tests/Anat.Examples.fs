@@ -24,7 +24,7 @@ open Xunit
    along, helping to infer the type of >>> in this case. We could equally
    specify the types of f or g with the same result. *)
 
-let addA f g : Arrow<(int -> int)> =
+let addA f g : int -> int =
     f &&& g >>> (fun (y, z) -> y + z)
 
 [<Fact>]
@@ -69,11 +69,11 @@ module Circuit =
 type Circuit<'a,'b> with
 
     static member Arrow (circuit: Circuit<'a,'b>) =
-        Arrow (circuit)
+        circuit
 
-    static member Compose (Arrow f) =
-        fun (Arrow g) ->
-            Arrow (Circuit.compose f g)
+    static member Compose f =
+        fun g ->
+            Circuit.compose f g
 
 (* Circuit Primitives *)
 
@@ -101,11 +101,11 @@ let ``constant behaves correctly`` () =
 
 (* Circuit Mean *)
 
-let sum : Arrow<Circuit<unit,int>> =
+let sum : Circuit<unit,int> =
     constant 1 >>> total
 
 (* Circuit Mean Tests *)
 
 [<Fact>]
 let ``sum behaves correctly`` () =
-    (Arrow.run >> Circuit.run) sum [ (); (); () ] =! [ 1; 2; 3 ]
+    Circuit.run sum [ (); (); () ] =! [ 1; 2; 3 ]
