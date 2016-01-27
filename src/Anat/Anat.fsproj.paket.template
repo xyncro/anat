@@ -1,0 +1,31 @@
+﻿type project
+id
+    Anat
+title
+    Anat
+description
+    Arrows for F#
+tags
+    function arrows f#
+version
+    1.0.0-b001
+owners
+    Andrew Cherry
+authors
+    Andrew Cherry
+copyright
+    Copyright Xyncro Ltd 2016
+projectUrl
+    https://xyncro.tech
+licenseUrl
+    https://github.com/xyncro/anat/blob/master/LICENSE.md
+requireLicenseAcceptance
+    false
+files
+    !./bin/*.*
+    ../../targets/Anat.Net35/bin/Anat.dll ==> lib/net35
+    ../../targets/Anat.Net35/bin/Anat.xml ==> lib/net35
+    ../../targets/Anat.Net35/bin/Anat.pdb ==> lib/net35
+    ../../targets/Anat.Profile259/bin/Anat.dll ==> lib/portable-net45+netcore45+wpa81+wp8+MonoAndroid1+MonoTouch1
+    ../../targets/Anat.Profile259/bin/Anat.xml ==> lib/portable-net45+netcore45+wpa81+wp8+MonoAndroid1+MonoTouch1
+    ../../targets/Anat.Profile259/bin/Anat.pdb ==> lib/portable-net45+netcore45+wpa81+wp8+MonoAndroid1+MonoTouch1
