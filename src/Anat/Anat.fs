@@ -1,5 +1,7 @@
 module Anat
 
+open System
+
 (* Inference
 
    Static (compile time) inference for various functions in the (pseudo) type
@@ -18,14 +20,14 @@ module Infer =
     type ArrowDefaults =
         | ArrowDefaults
 
-        (* Value Functions *)
+        (* _ -> _ *)
 
-        static member Arrow (f: 'a -> 'b when 'b : equality) =
+        static member Arrow (f: _ -> _) =
             f
 
-        (* Async Value Functions *)
+        (* Func<_,_> *)
 
-        static member Arrow (f: 'a -> Async<'b>) =
+        static member Arrow (f: Func<_,_>) =
             f
 
     let inline arrowDefaults (a: ^a, _: ^defaults) =
@@ -43,18 +45,15 @@ module Infer =
     type ComposeDefaults =
         | ComposeDefaults
 
-        (* Value Functions *)
+        (* _ -> _ *)
 
-        static member Compose (f: 'a -> 'b when 'b : equality) =
-            fun (g: 'b -> 'c when 'c : equality) ->
-                f >> g
+        static member Compose (f: _ -> _) =
+            fun (g: _ -> _) -> f >> g
 
-        (* Async Value Functions *)
+        (* Func<_,_> *)
 
-        static member Compose (f: 'a -> Async<'b>) =
-            fun (g: 'b -> Async<'c>) ->
-                fun a ->
-                    async.Bind (f a, g)
+        static member Compose (f: Func<_,_>) =
+            fun (g: Func<_,_>) -> Func<_,_> (f.Invoke >> g.Invoke)
 
     let inline composeDefaults (a: ^a, _: ^defaults) =
         ((^a or ^defaults) : (static member Compose: ^a -> (^b -> ^c)) a)
@@ -70,18 +69,15 @@ module Infer =
     type FirstDefaults =
         | FirstDefaults
 
-        (* Value Functions *)
+        (* _ -> _ *)
 
-        static member First (f: 'a -> 'b when 'b : equality) =
-            fun (a, b) ->
-                f a, b
+        static member First (f: _ -> _) =
+            fun (a, b) -> f a, b
 
-        (* Async Value Functions *)
+        (* Func<_,_> *)
 
-        static member First (f: 'a -> Async<'c>) =
-            fun (a, b) ->
-                async.Bind (f a, fun c ->
-                    async.Return (c, b))
+        static member First (f: Func<_,_>) =
+            Func<_*_,_*_> (fun (a, b) -> f.Invoke a, b)
 
     (* Functions *)
 
@@ -99,18 +95,15 @@ module Infer =
     type SecondDefaults =
         | SecondDefaults
 
-        (* Value Functions *)
+        (* _ -> _ *)
 
-        static member Second (f: 'a -> 'b when 'b : equality) =
-            fun (a, b) ->
-                a, f b
+        static member Second (f: _ -> _) =
+            fun (a, b) -> a, f b
 
-        (* Async Value Functions *)
+        (* Func<_,_> *)
 
-        static member Second (f: 'b -> Async<'c>) =
-            fun (a, b) ->
-                async.Bind (f b, fun c ->
-                    async.Return (a, c))
+        static member Second (f: Func<_,_>) =
+            Func<_*_,_*_> (fun (a, b) -> a, f.Invoke b)
 
     let inline secondDefaults (a: ^a, _: ^defaults) =
         ((^a or ^defaults) : (static member Second: ^a -> ^b) a)
@@ -126,21 +119,15 @@ module Infer =
     type FanoutDefaults =
         | FanoutDefaults
 
-        (* Value Functions *)
+        (* _ -> _ *)
 
-        static member Fanout (f: 'a -> 'b when 'b : equality) =
-            fun (g: 'a -> 'c when 'c : equality) ->
-                fun a ->
-                    f a, g a
+        static member Fanout (f: _ -> _) =
+            fun (g: _ -> _) -> fun a -> f a, g a
 
-        (* Async Value Functions *)
+        (* Func<_,_> *)
 
-        static member Fanout (f: 'a -> Async<'b>) =
-            fun (g: 'a -> Async<'c>) ->
-                fun a ->
-                    async.Bind (f a, fun b ->
-                        async.Bind (g a, fun c ->
-                            async.Return (b, c)))
+        static member Fanout (f: Func<_,_>) =
+            fun (g: Func<_,_>) -> Func<_,_*_> (fun a -> f.Invoke a, g.Invoke a)
 
     let inline fanoutDefaults (a: ^a, _: ^defaults) =
         ((^a or ^defaults) : (static member Fanout: ^a -> (^b -> ^c)) a)
@@ -157,21 +144,15 @@ module Infer =
     type SplitDefaults =
         | SplitDefaults
 
-        (* Value Functions *)
+        (* _ -> _ *)
 
-        static member Split (f: 'a -> 'c when 'c : equality) =
-            fun (g: 'b -> 'd when 'd : equality) ->
-                fun (a, b) ->
-                    f a, g b
+        static member Split (f: _ -> _) =
+            fun (g: _ -> _) -> fun (a, b) -> f a, g b
 
-        (* Async Value Functions *)
+        (* Func<_,_> *)
 
-        static member Split (f: 'a -> Async<'c>) =
-            fun (g: 'b -> Async<'d>) ->
-                fun (a, b) ->
-                    async.Bind (f a, fun c ->
-                        async.Bind (g b, fun d ->
-                            async.Return (c, d)))
+        static member Split (f: Func<_,_>) =
+            fun (g: Func<_,_>) -> Func<_*_,_*_> (fun (a, b) -> f.Invoke a, g.Invoke b)
 
     let inline splitDefaults (a: ^a, _: ^defaults) =
         ((^a or ^defaults) : (static member Split: ^a -> (^b -> ^c)) a)

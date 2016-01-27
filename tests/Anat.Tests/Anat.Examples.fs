@@ -60,6 +60,13 @@ module Circuit =
 
             compose f' g', c)
 
+    let rec fanout (Circuit f) (Circuit g) =
+        Circuit (fun a ->
+            let f', b = f a
+            let g', c = g a
+
+            fanout f' g', (b, c))
+
     let rec run (Circuit f) =
         function | x :: xs -> f x |> fun (f', x') -> x' :: run f' xs
                  | _ -> []
@@ -68,12 +75,22 @@ module Circuit =
 
 type Circuit<'a,'b> with
 
-    static member Arrow (circuit: Circuit<'a,'b>) =
-        circuit
+    static member Arrow (f: Circuit<'a,'b>) =
+        f
 
     static member Compose f =
-        fun g ->
-            Circuit.compose f g
+        fun g -> Circuit.compose f g
+
+    static member Fanout f =
+        fun g -> Circuit.fanout f g
+
+(* Circuit Helpers *)
+
+let circuit =
+    Circuit.create
+
+let uncurry f =
+    fun (a, b) -> f a b
 
 (* Circuit Primitives *)
 
@@ -84,7 +101,7 @@ let accum' acc f =
     accum acc (fun a acc -> f a acc |> fun acc' -> (acc', acc'))
 
 let total =
-    accum' 0 (+)
+    accum' 0. (+)
 
 let constant x =
     Circuit.create (fun _ -> x)
@@ -93,7 +110,7 @@ let constant x =
 
 [<Fact>]
 let ``total behaves correctly`` () =
-    Circuit.run total [ 1; 0; 1; 0; 0; 2 ] =! [ 1; 1; 2; 2; 2; 4 ]
+    Circuit.run total [ 1.; 0.; 1.; 0.; 0.; 2. ] =! [ 1.; 1.; 2.; 2.; 2.; 4. ]
 
 [<Fact>]
 let ``constant behaves correctly`` () =
@@ -101,11 +118,11 @@ let ``constant behaves correctly`` () =
 
 (* Circuit Mean *)
 
-let sum : Circuit<unit,int> =
-    constant 1 >>> total
+let mean =
+    total &&& (constant 1. >>> total) >>> circuit (uncurry (/))
 
 (* Circuit Mean Tests *)
 
 [<Fact>]
-let ``sum behaves correctly`` () =
-    Circuit.run sum [ (); (); () ] =! [ 1; 2; 3 ]
+let ``mean behaves correctly`` () =
+    Circuit.run mean [ 0.; 10.; 2.; 3. ] =! [ 0.0; 5.0; 4.0; 3.75 ]
