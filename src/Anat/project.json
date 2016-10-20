@@ -1,0 +1,55 @@
+{
+  "title": "Anat",
+  "version": "1.0.1-*",
+  "authors": [
+    "Andrew Cherry"
+  ],
+  "description": "Arrows for F#",
+  "copyright": "Copyright Xyncro Ltd 2016",
+  "packOptions": {
+    "licenseUrl": "https://github.com/xyncro/anat/blob/master/LICENSE.md",
+    "projectUrl": "https://xyncro.tech",
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/xyncro/anat"
+    },
+    "owners": [
+      "Andrew Cherry"
+    ],
+    "tags": [
+      "function",
+      "arrows",
+      "f#",
+      "fsharp"
+    ],
+    "requireLicenseAcceptance": false
+  },
+  "buildOptions": {
+    "debugType": "portable",
+    "compilerName": "fsc",
+    "compile": {
+      "includeFiles": [
+        "Anat.fs"
+      ]
+    }
+  },
+  "tools": {
+    "dotnet-compile-fsc":"1.0.0-preview2-*"
+  },
+  "frameworks": {
+    "net35": {
+      "dependencies": {
+        "FSharp.Core": "3.1.2.5"
+      }
+    },
+    "netstandard1.6": {
+      "dependencies": {
+        "NETStandard.Library": "1.6.0",
+        "Microsoft.FSharp.Core.netcore": "1.0.0-alpha-160629"
+      }
+    }
+  },
+  "runtimes": {
+    "win": { }
+  }
+}
