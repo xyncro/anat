@@ -1,4 +1,6 @@
-
+NUGET
+  remote: http://www.nuget.org/api/v2
+    FSharp.Core (3.1.2.5)
 
 GROUP Build
 NUGET
