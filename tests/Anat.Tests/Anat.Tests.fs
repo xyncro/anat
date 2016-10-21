@@ -1,4 +1,4 @@
-﻿module Anat.Tests
+module Anat.Tests
 
 open System
 open Anat

@@ -1,4 +1,4 @@
-﻿module Anat.Examples
+module Anat.Examples
 
 open Anat
 open Anat.Operators
