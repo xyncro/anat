@@ -42,6 +42,14 @@
         "FSharp.Core": "3.1.2.5"
       }
     },
+    ".NETPortable,Version=v4.5,Profile=Profile259": {
+      "dependencies": {
+        "FSharp.Core": "3.1.2.5"
+      },
+      "frameworkAssemblies": {
+        "mscorlib": ""
+      }
+    },
     "netstandard1.6": {
       "dependencies": {
         "NETStandard.Library": "1.6.0",
