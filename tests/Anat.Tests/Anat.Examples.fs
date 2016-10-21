@@ -2,9 +2,12 @@
 
 open Anat
 open Anat.Operators
-open Swensen.Unquote
 open Xunit
-
+#if NET451
+open Swensen.Unquote
+#else
+let inline (=!) x y = Assert.StrictEqual(x, y)
+#endif
 (* Examples
 
    Examples (with tested outputs to give some extra proof against regressions)

@@ -2,8 +2,12 @@
 
 open System
 open Anat
-open Swensen.Unquote
 open Xunit
+#if NET451
+open Swensen.Unquote
+#else
+let inline (=!) x y = Assert.StrictEqual(x, y)
+#endif
 
 (* Fixtures
 

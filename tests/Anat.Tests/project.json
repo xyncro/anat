@@ -18,15 +18,27 @@
     "Anat": {
       "target": "project"
     },
-    "FSharp.Core": "4.0.1.5",
-    "Unquote": "3.1.2",
     "dotnet-test-xunit": "2.2.0-preview2-*",
     "xunit": "2.2.0-beta*"
   },
   "frameworks": {
     "net451": {
-      "frameworkAssemblies": {
-        "System.Runtime": ""
+      "dependencies": {
+        "FSharp.Core": "4.0.1.5",
+        "Unquote": "3.1.2",
+        "Microsoft.NETCore.Platforms": "1.0.1"
+      },
+      "imports": [
+        "portable-net45+win8+wp8+wpa81"
+      ]
+    },
+    "netcoreapp1.0": {
+      "dependencies": {
+        "Microsoft.NETCore.App": {
+          "type": "platform",
+          "version": "1.0.1"
+        },
+        "Microsoft.FSharp.Core.netcore": "1.0.0-alpha-*"
       },
       "imports": [
         "portable-net45+win8+wp8+wpa81"
