@@ -15,20 +15,17 @@
   },
   "testRunner": "xunit",
   "dependencies": {
-    "Anat": "*",
-    "dotnet-test-xunit": "2.2.0-preview2-*"
+    "Anat": {
+      "target": "project"
+    },
+    "FSharp.Core": "4.0.1.5",
+    "Unquote": "3.1.2",
+    "dotnet-test-xunit": "2.2.0-preview2-*",
+    "xunit": "2.2.0-beta*"
   },
   "frameworks": {
     "net451": {
-      "dependencies": {
-        "FSharp.Core": "4.0.1.5",
-        "Unquote": "3.1.2",
-        "xunit": "2.1.0",
-        "xunit.abstractions": "2.0.1",
-        "Microsoft.NETCore.Portable.Compatibility": "1.0.2"
-      },
       "frameworkAssemblies": {
-        "System": "",
         "System.Runtime": ""
       },
       "imports": [
