@@ -56,8 +56,5 @@
         "Microsoft.FSharp.Core.netcore": "1.0.0-alpha-160629"
       }
     }
-  },
-  "runtimes": {
-    "win": { }
   }
 }
