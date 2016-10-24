@@ -1,0 +1,21 @@
+language: csharp
+
+matrix:
+  include:
+    # - os: osx
+    #   osx_image: xcode7.3
+    #   dotnet: 1.0.0-preview2-003131
+    #   mono: none
+    - os: linux
+      dist: trusty
+      dotnet: 1.0.0-preview2-003131
+      mono: none
+      sudo: required
+
+notifications:
+  email:
+    on_success: change
+    on_failure: always
+
+script:
+  time dotnet restore && dotnet build src/Anat -f netstandard1.6 && dotnet test tests/Anat.Tests -f netcoreapp1.0
