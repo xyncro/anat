@@ -37,6 +37,12 @@
     "dotnet-compile-fsc":"1.0.0-preview2-*"
   },
   "frameworks": {
+    "netstandard1.6": {
+      "dependencies": {
+        "NETStandard.Library": "1.6.0",
+        "Microsoft.FSharp.Core.netcore": "1.0.0-alpha-160629"
+      }
+    },
     "net35": {
       "dependencies": {
         "FSharp.Core": "3.1.2.5"
@@ -48,12 +54,6 @@
       },
       "frameworkAssemblies": {
         "mscorlib": ""
-      }
-    },
-    "netstandard1.6": {
-      "dependencies": {
-        "NETStandard.Library": "1.6.0",
-        "Microsoft.FSharp.Core.netcore": "1.0.0-alpha-160629"
       }
     }
   }

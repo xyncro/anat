@@ -22,16 +22,6 @@
     "xunit": "2.2.0-beta*"
   },
   "frameworks": {
-    "net451": {
-      "dependencies": {
-        "FSharp.Core": "4.0.1.5",
-        "Unquote": "3.1.2",
-        "Microsoft.NETCore.Platforms": "1.0.1"
-      },
-      "imports": [
-        "portable-net45+win8+wp8+wpa81"
-      ]
-    },
     "netcoreapp1.0": {
       "dependencies": {
         "Microsoft.NETCore.App": {
@@ -39,6 +29,16 @@
           "version": "1.0.1"
         },
         "Microsoft.FSharp.Core.netcore": "1.0.0-alpha-*"
+      },
+      "imports": [
+        "portable-net45+win8+wp8+wpa81"
+      ]
+    },
+    "net451": {
+      "dependencies": {
+        "FSharp.Core": "4.0.1.5",
+        "Unquote": "3.1.2",
+        "Microsoft.NETCore.Platforms": "1.0.1"
       },
       "imports": [
         "portable-net45+win8+wp8+wpa81"

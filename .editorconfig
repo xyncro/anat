@@ -27,11 +27,11 @@ trim_trailing_whitespace = false
 indent_size = 4
 end_of_line = lf
 
-[*.json]
+[project.json]
 indent_size = 2
 end_of_line = lf
 insert_final_newline = true
 
 [*.{xproj,csproj,fsproj}]
 indent_size = 2
-insert_final_newline = true
+insert_final_newline = false
