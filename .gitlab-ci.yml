@@ -11,7 +11,7 @@ before_script:
 build:
   stage: build
   script:
-    - dotnet --verbose build src/Anat -f netstandard1.6
+    - dotnet --verbose build src/Anat -c Release -f netstandard1.6
   artifacts:
     untracked: true
 
@@ -20,4 +20,4 @@ test:
   dependencies:
     - build
   script:
-    - dotnet --verbose test tests/Anat.Tests -f netcoreapp1.0
+    - dotnet --verbose test tests/Anat.Tests -c Release -f netcoreapp1.0

@@ -18,4 +18,4 @@ notifications:
     on_failure: always
 
 script:
-  time dotnet restore && dotnet build src/Anat -f netstandard1.6 && dotnet test tests/Anat.Tests -f netcoreapp1.0
+  time dotnet restore && dotnet test tests/Anat.Tests -c Release -f netcoreapp1.0
