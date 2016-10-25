@@ -1,0 +1,10 @@
+* text=auto
+
+*.json text eol=lf
+*.fs diff=csharp text eol=lf
+*.fsi diff=csharp text eol=lf
+*.fsx diff=csharp text eol=lf
+*.sln text eol=crlf merge=union
+*.xproj  text eol=crlf
+*.fsproj text eol=crlf
+

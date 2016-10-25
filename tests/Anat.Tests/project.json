@@ -1,0 +1,48 @@
+{
+  "version": "1.0.0-*",
+  "buildOptions": {
+    "debugType": "portable",
+    "compilerName": "fsc",
+    "compile": {
+      "includeFiles": [
+        "Anat.Tests.fs",
+        "Anat.Examples.fs"
+      ]
+    }
+  },
+  "tools": {
+    "dotnet-compile-fsc":"1.0.0-preview2-*"
+  },
+  "testRunner": "xunit",
+  "dependencies": {
+    "Anat": {
+      "target": "project"
+    },
+    "dotnet-test-xunit": "2.2.0-preview2-*",
+    "xunit": "2.2.0-beta*"
+  },
+  "frameworks": {
+    "netcoreapp1.0": {
+      "dependencies": {
+        "Microsoft.NETCore.App": {
+          "type": "platform",
+          "version": "1.0.1"
+        },
+        "Microsoft.FSharp.Core.netcore": "1.0.0-alpha-*"
+      },
+      "imports": [
+        "portable-net45+win8+wp8+wpa81"
+      ]
+    },
+    "net451": {
+      "dependencies": {
+        "FSharp.Core": "4.0.1.5",
+        "Unquote": "3.1.2",
+        "Microsoft.NETCore.Platforms": "1.0.1"
+      },
+      "imports": [
+        "portable-net45+win8+wp8+wpa81"
+      ]
+    }
+  }
+}

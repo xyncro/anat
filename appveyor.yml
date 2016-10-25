@@ -1,0 +1,16 @@
+version: 1.0.{build}
+image: Visual Studio 2015
+environment:
+  CLI_VERSION: 1.0.0-preview2-003131
+
+build_script:
+  - ps: dotnet --info
+  - ps: dotnet restore
+  - ps: dotnet --verbose build src/Anat
+  - ps: dotnet --verbose test tests/Anat.Tests
+  - ps: dotnet --verbose pack src/Anat -c Release
+
+test: off
+
+artifacts:
+  - path: '**\*.nupkg'
