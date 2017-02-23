@@ -1,9 +1,9 @@
 <Project Sdk="FSharp.NET.Sdk;Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>net40;netstandard1.6</TargetFrameworks>
-    <VersionPrefix>1.0.1</VersionPrefix>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
+  <Import Project="..\..\nupkg.props" />
   <ItemGroup>
     <Compile Include="Anat.fs" />
     <EmbeddedResource Include="**\*.resx" />
