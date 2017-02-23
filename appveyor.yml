@@ -6,9 +6,9 @@ environment:
 build_script:
   - ps: dotnet --info
   - ps: dotnet restore
-  - ps: dotnet build -c Release --version-suffix "aci-$APPVEYOR_BUILD_NUMBER"
+  - ps: dotnet build -c Release --version-suffix "aci-${env:APPVEYOR_BUILD_NUMBER}"
   - ps: dotnet test -c Release tests/Anat.Tests/Anat.Tests.fsproj
-  - ps: dotnet pack -c Release --include-symbols --version-suffix "aci-$APPVEYOR_BUILD_NUMBER"
+  - ps: dotnet pack -c Release --include-symbols --version-suffix "aci-${env:APPVEYOR_BUILD_NUMBER}"
 
 test: off
 
