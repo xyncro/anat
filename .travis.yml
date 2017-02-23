@@ -1,0 +1,21 @@
+language: csharp
+
+matrix:
+  include:
+    - os: linux
+      dist: trusty
+      dotnet: 1.0.0-rc4-004842
+      mono: none
+      sudo: false
+
+notifications:
+  email:
+    on_success: change
+    on_failure: always
+
+script:
+  - dotnet --info
+  - dotnet restore
+  - dotnet build -c Release -f netstandard1.6 src/Anat
+  - dotnet test -c Release tests/Anat.Tests/Anat.Tests.fsproj
+  - dotnet pack -c Release -f netstandard1.6 --include-symbols --include-source --version-suffix "aci-$APPVEYOR_BUILD_NUMBER"
