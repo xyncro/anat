@@ -16,6 +16,6 @@ notifications:
 script:
   - dotnet --info
   - dotnet restore
-  - dotnet build -c Release -f netstandard1.6
+  - dotnet build -c Release -f netstandard1.6 src/Anat --version-suffix "aci-$APPVEYOR_BUILD_NUMBER"
   - dotnet test -c Release tests/Anat.Tests/Anat.Tests.fsproj
-  - dotnet pack -c Release -f netstandard1.6 --include-symbols --include-source --version-suffix "aci-$APPVEYOR_BUILD_NUMBER"
+  - dotnet pack -c Release --include-symbols --include-source --version-suffix "aci-$APPVEYOR_BUILD_NUMBER" || true
