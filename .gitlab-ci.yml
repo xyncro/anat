@@ -1,0 +1,21 @@
+
+stages:
+  - build
+
+build:
+  image: microsoft/dotnet:1.1-sdk-msbuild
+  stage: build
+
+  script:
+    - dotnet --info
+    - dotnet restore
+    - dotnet build -c Release -f netstandard1.6
+    - dotnet test -c Release test/Anat.Tests/Anat.Tests.fsproj
+    - dotnet pack -c Release -f netstandard1.6 --include-symbols --include-source --version-suffix "aci-$CI_BUILD_ID"
+  tags:
+    - dotnet
+  artifacts:
+    paths:
+      - "*/*/obj/project.assets.json"
+      - "src/*/bin"
+    expire_in: "30 days"
