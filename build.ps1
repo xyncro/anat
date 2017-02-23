@@ -12,7 +12,7 @@ checkExitCode
 dotnet restore
 checkExitCode
 
-dotnet build -c Release
+dotnet build -c Release --version-suffix "dev"
 checkExitCode
 
 dotnet test -c Release tests/Anat.Tests/Anat.Tests.fsproj
