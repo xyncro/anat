@@ -6,7 +6,7 @@ environment:
 build_script:
   - ps: dotnet --info
   - ps: dotnet restore
-  - ps: dotnet build -c Release src/Anat
+  - ps: dotnet build -c Release --version-suffix "aci-$APPVEYOR_BUILD_NUMBER"
   - ps: dotnet test -c Release tests/Anat.Tests/Anat.Tests.fsproj
   - ps: dotnet pack -c Release --include-symbols --include-source --version-suffix "aci-$APPVEYOR_BUILD_NUMBER"
 
