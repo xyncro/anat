@@ -8,6 +8,6 @@
     <PackageProjectUrl>https://xyncro.tech/anat/</PackageProjectUrl>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/xyncro/anat</RepositoryUrl>
-    <Tags>function;arrows;f#;fsharp</Tags>
+    <PackageTags>function;arrows;f#;fsharp</PackageTags>
   </PropertyGroup>
 </Project>
