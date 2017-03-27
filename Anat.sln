@@ -1,81 +1,56 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
-MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sln", "sln", "{FD10FBDC-0187-457F-B451-1E7B13203863}"
+# Visual Studio 15
+VisualStudioVersion = 15.0.26124.0
+MinimumVisualStudioVersion = 15.0.26124.0
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{31F73E42-94C9-4273-81F1-FCB984540614}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "dependencies", "dependencies", "{11E6EED5-0C09-41F2-A205-46F38B07DAB6}"
-	ProjectSection(SolutionItems) = preProject
-		paket.dependencies = paket.dependencies
-	EndProjectSection
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Anat", "src\Anat\Anat.fsproj", "{1639401D-FA5F-4A06-912B-8CC3D75D2E8A}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{AB282BC8-5793-4C6C-BFE7-4ABACD70B2F6}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{48A87BD0-995A-4E13-93A3-7DE5645CB9A2}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Anat", "src\Anat\Anat.fsproj", "{E87B1C18-3021-4634-A124-1F0FFFAFBDE2}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{370D1D74-CC46-4A06-BFA5-15EFA4B65D62}"
-EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Anat.Tests", "tests\Anat.Tests\Anat.Tests.fsproj", "{B826C5E9-67ED-4B68-B391-513BA23BA684}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{04E20EFF-008E-4A4B-B4DB-4B0E4F41B709}"
-	ProjectSection(SolutionItems) = preProject
-		tests\Anat.Tests\Anat.Tests.fsproj.paket.references = tests\Anat.Tests\Anat.Tests.fsproj.paket.references
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{3CE1FAB7-F711-48FD-8C46-29DA750481DA}"
-	ProjectSection(SolutionItems) = preProject
-		build.cmd = build.cmd
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "packages", "packages", "{7B4EB795-EAED-49BA-81AB-60E192637E72}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{5E072B2C-ECDE-4F61-89EF-63320668EA97}"
-	ProjectSection(SolutionItems) = preProject
-		src\Anat\Anat.fsproj.paket.template = src\Anat\Anat.fsproj.paket.template
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "targets", "targets", "{BAA479CF-1F02-4EA3-B23A-FE1D037622EF}"
-EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Anat.Net35", "targets\Anat.Net35\Anat.Net35.fsproj", "{14DC8E3D-F58E-4792-BDCC-325CEBFE9FA4}"
-EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Anat.Profile259", "targets\Anat.Profile259\Anat.Profile259.fsproj", "{14822678-880F-4611-B1FD-4800A009AD4F}"
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Anat.Tests", "tests\Anat.Tests\Anat.Tests.fsproj", "{8709FEF8-0700-4FB4-8A6E-CEBDA0A0C023}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
 		Release|Any CPU = Release|Any CPU
-	EndGlobalSection
-	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{E87B1C18-3021-4634-A124-1F0FFFAFBDE2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E87B1C18-3021-4634-A124-1F0FFFAFBDE2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E87B1C18-3021-4634-A124-1F0FFFAFBDE2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E87B1C18-3021-4634-A124-1F0FFFAFBDE2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B826C5E9-67ED-4B68-B391-513BA23BA684}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B826C5E9-67ED-4B68-B391-513BA23BA684}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B826C5E9-67ED-4B68-B391-513BA23BA684}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B826C5E9-67ED-4B68-B391-513BA23BA684}.Release|Any CPU.Build.0 = Release|Any CPU
-		{14DC8E3D-F58E-4792-BDCC-325CEBFE9FA4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{14DC8E3D-F58E-4792-BDCC-325CEBFE9FA4}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{14DC8E3D-F58E-4792-BDCC-325CEBFE9FA4}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{14DC8E3D-F58E-4792-BDCC-325CEBFE9FA4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{14822678-880F-4611-B1FD-4800A009AD4F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{14822678-880F-4611-B1FD-4800A009AD4F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{14822678-880F-4611-B1FD-4800A009AD4F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{14822678-880F-4611-B1FD-4800A009AD4F}.Release|Any CPU.Build.0 = Release|Any CPU
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1639401D-FA5F-4A06-912B-8CC3D75D2E8A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1639401D-FA5F-4A06-912B-8CC3D75D2E8A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1639401D-FA5F-4A06-912B-8CC3D75D2E8A}.Debug|x64.ActiveCfg = Debug|x64
+		{1639401D-FA5F-4A06-912B-8CC3D75D2E8A}.Debug|x64.Build.0 = Debug|x64
+		{1639401D-FA5F-4A06-912B-8CC3D75D2E8A}.Debug|x86.ActiveCfg = Debug|x86
+		{1639401D-FA5F-4A06-912B-8CC3D75D2E8A}.Debug|x86.Build.0 = Debug|x86
+		{1639401D-FA5F-4A06-912B-8CC3D75D2E8A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1639401D-FA5F-4A06-912B-8CC3D75D2E8A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1639401D-FA5F-4A06-912B-8CC3D75D2E8A}.Release|x64.ActiveCfg = Release|x64
+		{1639401D-FA5F-4A06-912B-8CC3D75D2E8A}.Release|x64.Build.0 = Release|x64
+		{1639401D-FA5F-4A06-912B-8CC3D75D2E8A}.Release|x86.ActiveCfg = Release|x86
+		{1639401D-FA5F-4A06-912B-8CC3D75D2E8A}.Release|x86.Build.0 = Release|x86
+		{8709FEF8-0700-4FB4-8A6E-CEBDA0A0C023}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8709FEF8-0700-4FB4-8A6E-CEBDA0A0C023}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8709FEF8-0700-4FB4-8A6E-CEBDA0A0C023}.Debug|x64.ActiveCfg = Debug|x64
+		{8709FEF8-0700-4FB4-8A6E-CEBDA0A0C023}.Debug|x64.Build.0 = Debug|x64
+		{8709FEF8-0700-4FB4-8A6E-CEBDA0A0C023}.Debug|x86.ActiveCfg = Debug|x86
+		{8709FEF8-0700-4FB4-8A6E-CEBDA0A0C023}.Debug|x86.Build.0 = Debug|x86
+		{8709FEF8-0700-4FB4-8A6E-CEBDA0A0C023}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8709FEF8-0700-4FB4-8A6E-CEBDA0A0C023}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8709FEF8-0700-4FB4-8A6E-CEBDA0A0C023}.Release|x64.ActiveCfg = Release|x64
+		{8709FEF8-0700-4FB4-8A6E-CEBDA0A0C023}.Release|x64.Build.0 = Release|x64
+		{8709FEF8-0700-4FB4-8A6E-CEBDA0A0C023}.Release|x86.ActiveCfg = Release|x86
+		{8709FEF8-0700-4FB4-8A6E-CEBDA0A0C023}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{11E6EED5-0C09-41F2-A205-46F38B07DAB6} = {FD10FBDC-0187-457F-B451-1E7B13203863}
-		{E87B1C18-3021-4634-A124-1F0FFFAFBDE2} = {AB282BC8-5793-4C6C-BFE7-4ABACD70B2F6}
-		{B826C5E9-67ED-4B68-B391-513BA23BA684} = {370D1D74-CC46-4A06-BFA5-15EFA4B65D62}
-		{04E20EFF-008E-4A4B-B4DB-4B0E4F41B709} = {11E6EED5-0C09-41F2-A205-46F38B07DAB6}
-		{3CE1FAB7-F711-48FD-8C46-29DA750481DA} = {FD10FBDC-0187-457F-B451-1E7B13203863}
-		{7B4EB795-EAED-49BA-81AB-60E192637E72} = {FD10FBDC-0187-457F-B451-1E7B13203863}
-		{5E072B2C-ECDE-4F61-89EF-63320668EA97} = {7B4EB795-EAED-49BA-81AB-60E192637E72}
-		{14DC8E3D-F58E-4792-BDCC-325CEBFE9FA4} = {BAA479CF-1F02-4EA3-B23A-FE1D037622EF}
-		{14822678-880F-4611-B1FD-4800A009AD4F} = {BAA479CF-1F02-4EA3-B23A-FE1D037622EF}
+		{1639401D-FA5F-4A06-912B-8CC3D75D2E8A} = {31F73E42-94C9-4273-81F1-FCB984540614}
+		{8709FEF8-0700-4FB4-8A6E-CEBDA0A0C023} = {48A87BD0-995A-4E13-93A3-7DE5645CB9A2}
 	EndGlobalSection
 EndGlobal
