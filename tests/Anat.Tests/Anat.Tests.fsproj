@@ -9,7 +9,6 @@
   <ItemGroup>
     <Compile Include="Anat.Tests.fs" />
     <Compile Include="Anat.Examples.fs" />
-    <Compile Include="Main.fs" />
     <EmbeddedResource Include="**\*.resx" />
   </ItemGroup>
 
